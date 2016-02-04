@@ -11,21 +11,26 @@
 
 	function loadImgResource(key, src, callback) {
 		loadedObject[key] = false;
-		console.log(loadedObject);
+		
 		var $img = $('<img/>').attr('src', src)
 						.load(function() {
 							if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
 					            return 'broken image!';
 					        } else {
+					        	var loadedArray = [];
 					        	loadedObject[key] = true;
 					        	$.each(loadedObject, function(key, loaded) {
-					        		console.log(key, loaded);
-					        		if (!loaded) {
-					        			return false;
-					        		} else {
-					        			$overlay.fadeOut(1000);
-					        		};
+					        		// console.log(key, loaded);
+					        		loadedArray.push(loaded);
 					        	});
+
+
+					        	// console.log($.inArray(false, loadedArray));
+
+					        	if ($.inArray(false, loadedArray) == -1 ) {
+					        		$overlay.fadeOut(1000);
+					        	};
+
 					            callback();
 					        }
 						})
@@ -43,7 +48,7 @@
 
 	// give loading overlay a background once resource is loaded
 	loadImgResource('loader', overlayUrl, function() {
-		console.log('image loaded!');
+		console.log('overlay loaded!');
 		$overlay.css({'background-image': 'url(' + overlayUrl + ')'});
 	});
 
@@ -75,7 +80,12 @@
 		$this.css({'background-color':  backgroundColor});
 		// image
 		loadImgResource('background', backgroundImage, function() {
+			console.log('background loaded!');
 			$this.css({'background-image': 'url(' + backgroundImage + ')'});
+		});
+		loadImgResource('test', 'http://www.planwallpaper.com/static/images/Winter-Tiger-Wild-Cat-Images.jpg', function() {
+			console.log('test loaded');
+			// $this.css({'background-image': 'url(' + backgroundImage + ')'});
 		});
 	}
 
